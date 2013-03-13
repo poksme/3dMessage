@@ -1,0 +1,564 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Cracktro Style Message</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+			
+		<script src="vendor/three.js/Three.js"></script>
+		<script src="vendor/three.js/Detector.js"></script>
+		<!-- https://github.com/mrdoob/stats.js -->
+		<script src="vendor/three.js/Stats.js"></script>
+
+		<!-- <script src="vendor/threex/THREEx.screenshot.js"></script>
+		<script src="vendor/threex/THREEx.FullScreen.js"></script> -->
+		<script src="vendor/threex/THREEx.WindowResize.js"></script>
+		<script src="vendor/threex.dragpancontrols.js"></script>
+
+		<script src="vendor/three.js/ShaderExtras.js"></script>
+		<script src="vendor/three.js/postprocessing/EffectComposer.js"></script>
+		<script src="vendor/three.js/postprocessing/RenderPass.js"></script>
+		<script src="vendor/three.js/postprocessing/BloomPass.js"></script>
+		<script src="vendor/three.js/postprocessing/ShaderPass.js"></script>
+		<script src="vendor/three.js/postprocessing/MaskPass.js"></script>
+		<script src="js/csg.js"></script>
+		<script src="js/ThreeCSG.js"></script>
+		<script src="js/mousetrap.min.js"></script>
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<link  href="css/main.css" rel="stylesheet"/>
+	</head>
+<body>
+	<!-- three.js container -->
+	<div id="container">
+		<textarea type='text' name='Message' id='InputField'>3615  
+poksme</textarea>
+	</div>
+	<!-- info on screen display -->
+	<script type="text/javascript">
+var inputFieldTaped = false;
+
+function getParameterByName(name)
+{
+  	name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+  	var regexS = "[\\?&]" + name + "=([^&#]*)";
+  	var regex = new RegExp(regexS);
+  	var results = regex.exec(window.location.search);
+  	if (results == null) {
+    	return "";
+  	} else {
+    	return decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
+}
+
+$(document).ready(function () {
+	var particles = [];
+	var letters = [];
+	var stats, scene, renderer, composer, projector, particleSystem;
+	var camera, cameraControl;
+	var material;
+	var font = [];
+	var wireframe;
+	var sentences = getParameterByName('msg');
+	var starfield = (getParameterByName('starfield') === 'true')
+	sentences = (sentences != "" ? sentences : $('#InputField').val()).toLowerCase().split(/\r\n|\r|\n/);
+
+	$('#InputField').focus().on('input', function() {
+		if (!inputFieldTaped) {
+			this.value = this.value[0];
+			inputFieldTaped = true;
+		}
+		sentences = this.value.toLowerCase().split(/\r\n|\r|\n/);
+		removeTypedMessage();
+		processTypedMessage();
+		setCameraPosition();
+	});
+
+	function setCameraPosition () {
+		var maxSize = 0;
+
+		for (var i = 0; i < sentences.length; i++) {
+			maxSize = Math.max(maxSize, sentences[i].length);
+		}
+		maxSize = Math.max(maxSize * 5, sentences.length * 10);
+		camera.position.set(0, 0, maxSize);
+	}
+
+	function removeTypedMessage () {
+		for (var it = 0; it < letters.length; it++){
+			scene.remove(letters[it]);
+		}
+		letters = [];
+	}
+
+	function processTypedMessage () {
+		var len = 0;
+
+		for (var iit = 0; iit < sentences.length; iit++) {
+			for (var it = 0; it < sentences[iit].length; it++) {
+				if (sentences[iit][it] in font) {
+					letters[len]	= new THREE.Mesh(font[sentences[iit][it]], material );
+				letters[len].position.x += 5 * (it - sentences[iit].length / 2 + 0.5);
+				letters[len].position.y -= 5 * (iit - sentences.length / 2 + 0.5);
+				len++;
+				}
+			}
+		}
+		for (var it = 0; it < letters.length; it++) {
+			scene.add(letters[it]);
+		}
+	}
+
+// 3D GHETTO CHARACTERS MODELS
+	font['3'] = [
+	"XXXX",
+	"   X",
+	"  XX",
+	"XXXX"
+	]
+	font['6'] = [
+	" XXX",
+	"XX  ",
+	"X  X",
+	" XX "
+	]
+	font['1'] = [
+	" XX ",
+	"X X ",
+	"  X ",
+	"XXXX"
+	]
+	font['5'] = [
+	"XXXX",
+	"XX  ",
+	"  XX",
+	"XXXX"
+	]
+	font['.'] = [
+	"    ",
+	"    ",
+	"    ",
+	" X  "
+	]
+	font['a'] = [
+	" XX ",
+	"X  X",
+	"XXXX",
+	"X  X"
+	];
+	font['b'] = [
+	"XXX ",
+	"X X ",
+	"X  X",
+	"XXXX"
+	];
+	font['c'] = [
+	" XXX",
+	"X   ",
+	"X   ",
+	" XXX"
+	]
+	font['d'] = [
+	"XXX ",
+	"X  X",
+	"X  X",
+	"XXX "
+	]
+	font['e'] = [
+	"XXXX",
+	"X   ",
+	"XX  ",
+	"XXXX"
+	]
+	font['f'] = [
+	"XXXX",
+	"X   ",
+	"XX  ",
+	"X   "
+	]
+	font['g'] = [
+	" XXX",
+	"X   ",
+	"X  X",
+	" XXX"
+	]
+	font['h'] = [
+	"X  X",
+	"X  X",
+	"XXXX",
+	"X  X"
+	]
+	font['i'] = [
+	"XXX ",
+	" X  ",
+	" X  ",
+	"XXX "
+	]
+	font['j'] = [
+	"XXX ",
+	" X  ",
+	" X  ",
+	"XX  "
+	]
+	font['k'] = [
+	"X   ",
+	"X X ",
+	"XX  ",
+	"X X "
+	]
+	font['l'] = [
+	"X   ",
+	"X   ",
+	"X   ",
+	"XXXX"
+	]
+	font['m'] = [
+	"XXXX",
+	"XX X",
+	"X  X",
+	"X  X"
+	]
+	font['n'] = [
+	"X  X",
+	"XX X",
+	"X XX",
+	"X  X"
+	]
+	font['o'] = [
+	" XX ",
+	"X  X",
+	"X  X",
+	" XX "
+	]
+	font['p'] = [
+	"XXX ",
+	"X  X",
+	"XXX ",
+	"X   "
+	]
+	font['q'] = [
+	" XX ",
+	"X  X",
+	"X X ",
+	" X X"
+	]
+	font['r'] = [
+	"XXX ",
+	"X  X",
+	"XXX ",
+	"X  X"
+	]
+	font['s'] = [
+	"XXXX",
+	" X  ",
+	"  X ",
+	"XXXX"
+	]
+	font['t'] = [
+	"XXX ",
+	" X  ",
+	" X  ",
+	" X  "
+	]
+	font['u'] = [
+	"X  X",
+	"X  X",
+	"X  X",
+	" XX "
+	]
+	font['v'] = [
+	"X  X",
+	"X X ",
+	"XX  ",
+	"X   "
+	]
+	font['w'] = [
+	"X  X",
+	"X  X",
+	"XX X",
+	"XXXX"
+	]
+	font['x'] = [
+	"X  X",
+	"X  X",
+	" XX " ,
+	"X  X"
+	]
+	font['y'] = [
+	"X X ",
+	"X X ",
+	" X  ",
+	" X  "
+	]
+	font['z'] = [
+	"XXXX",
+	"  X ",
+	" X  ",
+	"XXXX"
+	]
+	font[' '] = [
+	"    ",
+	"    ",
+	"    ",
+	"    "		
+	]
+	font['!'] = [
+	" X X",
+	" X X",
+	"    ",
+	" X X"
+	]
+	font['#'] = [
+	"X X ",
+	"XXXX",
+	"X X ",
+	" XXX"
+	]
+//
+
+	function processFont () {
+		for (var i in font) {
+			var geometry = new THREE.CubeGeometry(4, 4, 1);
+			for (var j = 0; j < font[i].length; j++) {
+				for (var k = 0; k < font[i][j].length; k++) {
+					if (font[i][j][k] === ' ') {
+						var resultCsg = THREE.CSG.toCSG(new THREE.Mesh(geometry, material));
+						var subCubeMesh = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), material);
+						subCubeMesh.position.y += ((font[i].length - 1) / 2) - j;
+						subCubeMesh.position.x += k - ((font[i][j].length - 1) / 2);
+						geometry = THREE.CSG.fromCSG(resultCsg.subtract(THREE.CSG.toCSG(subCubeMesh)));
+					}
+				}
+			}
+			font[i] = geometry;
+		}
+	}
+
+
+	if( !init() )	animate();
+
+	// init the scene
+	function init(){
+
+		if( Detector.webgl ){
+			renderer = new THREE.WebGLRenderer({
+				antialias		: true,	// to get smoother output
+				preserveDrawingBuffer	: true	// to allow screenshot
+			});
+		}else{
+			renderer	= new THREE.CanvasRenderer();
+		}
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.getElementById('container').appendChild(renderer.domElement);
+
+		// add Stats.js - https://github.com/mrdoob/stats.js
+		stats = new Stats();
+		stats.domElement.style.position	= 'absolute';
+		stats.domElement.style.top	= '0px';
+
+		// document.body.appendChild( stats.domElement );
+
+		processFont();
+
+
+		// create a scene
+		scene = new THREE.Scene(0, 0, 0);
+
+		// calc size
+		// put a camera in the scene
+		camera	= new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000 );
+		scene.add(camera);
+		setCameraPosition(camera);
+
+		// create a camera contol
+		cameraControls	= new THREEx.DragPanControls(camera)
+
+		// transparently support window resize
+		THREEx.WindowResize.bind(renderer, camera);
+
+		// // NO MORE FULL SCREEN
+		// // allow 'p' to make screenshot
+		// THREEx.Screenshot.bindKey(renderer);
+		// // allow 'f' to go fullscreen where this feature is supported
+		// if( THREEx.FullScreen.available() ){
+		// 	THREEx.FullScreen.bindKey();		
+		// 	document.getElementById('inlineDoc').innerHTML	+= "- <i>f</i> for fullscreen";
+		// }
+
+		// here you add your objects
+		// - you will most likely replace this part by your own
+		var light	= new THREE.AmbientLight( Math.random() * 0xffffff );
+		scene.add( light );
+		var light	= new THREE.DirectionalLight( Math.random() * 0xffffff );
+		light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+		scene.add( light );
+		var light	= new THREE.DirectionalLight( Math.random() * 0xffffff );
+		light.position.set( Math.random(), Math.random(), Math.random() ).normalize();
+		scene.add( light );
+		var light	= new THREE.PointLight( Math.random() * 0xffffff );
+		light.position.set( Math.random()-0.5, Math.random()-0.5, Math.random()-0.5 )
+					.normalize().multiplyScalar(1.2);
+		scene.add( light );
+		var light	= new THREE.PointLight( Math.random() * 0xffffff );
+		light.position.set( Math.random()-0.5, Math.random()-0.5, Math.random()-0.5 )
+					.normalize().multiplyScalar(1.2);
+		scene.add( light );
+
+
+		material	= new THREE.MeshLambertMaterial({ambient: 0x808080, color: Math.random() * 0x9999ff});
+		wireframe = new THREE.MeshLambertMaterial( { color: 0xffffff, wireframe: true});
+		wireframe	= new THREE.MeshLambertMaterial({ambient: 0x808080, color: Math.random() * 0x9999ff});
+
+
+		processTypedMessage(material);
+		// removeTypedMessage();
+		// processTypedMessage();
+
+
+		// define the stack of passes for postProcessing
+		composer = new THREE.EffectComposer( renderer );
+		renderer.autoClear = false;
+
+		var renderModel	= new THREE.RenderPass( scene, camera );
+		composer.addPass( renderModel );
+
+		var effectBloom = new THREE.BloomPass( 1.3 );
+		composer.addPass( effectBloom );
+
+		var effectScreen= new THREE.ShaderPass( THREE.ShaderExtras[ "screen" ] );
+		effectScreen.renderToScreen = true;
+		composer.addPass( effectScreen );
+
+		projector = new THREE.Projector();
+
+// PARTICLES
+	// create the particle variables
+	if (starfield) {
+		start = 100,
+		end = -800,
+		particleCount = Math.abs(start - end),
+		    particles = new THREE.Geometry(),
+		    pMaterial =
+		      new THREE.ParticleBasicMaterial({
+		        color: 0xFFFFFF,
+		        size: 5
+		      });
+
+		// now create the individual particles
+		for(var p = 0; p < particleCount; p++) {
+
+		  // create a particle with random
+		  // position values, -250 -> 250
+		  var pX = Math.random() * 500 - 250,
+		      pY = Math.random() * 500 - 250,
+		      pZ = p + end,
+		      particle = new THREE.Vertex(
+		        new THREE.Vector3(pX, pY, pZ)
+		      );
+		      particle.velocity = new THREE.Vector3(
+		      	0,
+		      	0,
+		      	-5
+		      	)
+
+		  // add it to the geometry
+		  particles.vertices.push(particle);
+		}
+
+		// create the particle system
+		particleSystem =
+		  new THREE.ParticleSystem(
+		    particles,
+		    pMaterial);
+
+		// add it to the scene
+		scene.add(particleSystem);
+	}
+//
+
+	}
+
+	// animation loop
+	function animate() {
+
+		// loop on request animation loop
+		// - it has to be at the begining of the function
+		// - see details at http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+		requestAnimationFrame( animate );
+		 // particleSystem.rotation.y += 0.01;
+		// do the render
+
+// PARTICLES
+	if (starfield) {
+		var pCount = particleCount;
+	  	while(pCount--) {
+
+		    // get the particle
+		    var particle =
+		      particles.vertices[pCount];
+
+		    // check if we need to reset
+		    if(particle.position.z < -800) {
+		      	particle.position.x = Math.random() * 500 - 250;
+		      	particle.position.y = Math.random() * 500 - 250;
+		      	particle.position.z = 100;
+		    }
+		    particle.position.addSelf(particle.velocity);
+		}
+
+		  // flag to the particle system
+		  // that we've changed its vertices.
+		particleSystem.geometry.__dirtyVertices = true;
+	}
+
+
+//
+
+		render();
+
+		// update stats
+		stats.update();
+	}
+
+	// render the scene
+	function render() {
+		// variable which is increase by Math.PI every seconds - usefull for animation
+		// var PIseconds	= Date.now() * Math.PI;
+
+		// update camera controls
+		cameraControls.update();
+
+
+		// actually render the scene
+		renderer.clear();
+		composer.render();
+	}
+
+
+	function onDocumentMouseDown( event ) {
+
+			event.preventDefault();
+
+			var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
+			projector.unprojectVector( vector, camera );
+
+			var tmp = new THREE.Vector3(0, 0, 0);
+
+			var raycaster = new THREE.Ray(camera.position, vector.subSelf(camera.position).normalize());
+			var intersects = raycaster.intersectObjects( letters );
+
+
+			if ( intersects.length > 0 ) {
+				if (intersects[0].object.material === wireframe)
+					intersects[0].object.material = material;
+				else
+					intersects[0].object.material = wireframe;
+			}
+		}
+
+	document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+
+});
+	</script>
+</body>
+</html>
