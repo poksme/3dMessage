@@ -10,10 +10,89 @@ body {
 }
 #InputField {
 	opacity: 0;
-	height: 0px;
-	width: 0px;
+	height: 100%;
+	width: 100%;
 	margin-top: 0px;
-	position: fixed;;
+	position: fixed;
+	cursor:pointer;
+}
+
+
+.UIButton {
+	opacity: 0.5;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #424242), color-stop(1, #2b2b2b) );
+	background:-moz-linear-gradient( center top, #424242 5%, #2b2b2b 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#424242', endColorstr='#2b2b2b');
+	background-color:#424242;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	display:inline-block;
+	color:#c2c2c2;
+	font-family:Arial;
+	font-size:14px;
+	font-weight:bold;
+	padding:6px 10px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #2b2b2b;
+}.UIButton:hover {
+	opacity: 1;
+	cursor: pointer;
+/*	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #2b2b2b), color-stop(1, #424242) );
+	background:-moz-linear-gradient( center top, #2b2b2b 5%, #424242 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#2b2b2b', endColorstr='#424242');
+	background-color:#2b2b2b;*/
+}
+
+.UIButtonActive {
+	opacity: 0.5;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #5c5c5c), color-stop(1, #383838) );
+	background:-moz-linear-gradient( center top, #5c5c5c 5%, #383838 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#5c5c5c', endColorstr='#383838');
+	background-color:#5c5c5c;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	display:inline-block;
+	color:#5d9abb;
+	font-family:Arial;
+	font-size:14px;
+	font-weight:bold;
+	padding:6px 10px;
+	text-decoration:none;
+	text-shadow:1px 1px 12px #53a2c0;
+}.UIButtonActive:hover {
+	opacity: 1;
+	cursor: pointer;
+/*	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #383838), color-stop(1, #5c5c5c) );
+	background:-moz-linear-gradient( center top, #383838 5%, #5c5c5c 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#383838', endColorstr='#5c5c5c');
+	background-color:#383838;*/
+}
+
+#shareButton {
+	position: fixed;
+	right: 10px;
+	bottom: 10px;
+}
+
+#starfieldButton {
+	position: fixed;
+	right: 80px;
+	bottom: 10px;
+}
+
+#ShareField {
+	position: fixed;
+	bottom: 30px;
+	right: 10px;
+	background-color: #333;
+	color: #AAA;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	position: 2;
 }
 
 #info .top {

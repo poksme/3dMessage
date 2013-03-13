@@ -33,9 +33,25 @@
 	<div id="container">
 		<textarea type='text' name='Message' id='InputField'>3615  
 poksme</textarea>
+		<p id='ShareField'>http://3615.poks.me</p>
+		<a href="#" class="UIButton" id='shareButton'>share</a>
+		<a href="#" id='starfieldButton'>starfield</a>
 	</div>
 	<!-- info on screen display -->
 	<script type="text/javascript">
+// BIG BROTHER ANALYTICS
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-39241558-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+	  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+//
+
+
+
 var inputFieldTaped = false;
 
 function getParameterByName(name)
@@ -51,8 +67,24 @@ function getParameterByName(name)
 	}
 }
 
+function parameterArrayToGet(arr) {
+	var ret = "";
+	for (var key in arr) {
+		if (arr[key] !== "" && arr[key] !== false) {
+			if (ret === "") {
+				ret += '?'
+			} else {
+				ret += '&'
+			}
+			ret += key + '=' + arr[key];
+		}
+	}
+	return ret;
+}
+
 $(document).ready(function () {
 	var particles = [];
+	var getArguments = []
 	var letters = [];
 	var stats, scene, renderer, composer, projector, particleSystem;
 	var camera, cameraControl;
@@ -61,17 +93,56 @@ $(document).ready(function () {
 	var wireframe;
 	var sentences = getParameterByName('msg');
 	var starfield = (getParameterByName('starfield') === 'true')
-	sentences = (sentences != "" ? sentences : $('#InputField').val()).toLowerCase().split(/\r\n|\r|\n/);
+	getArguments['starfield'] = starfield;
+	sentences = (sentences != "" ? sentences : $('#InputField').val()).toLowerCase();
+	$('#InputField').empty().append(sentences);
+	getArguments['msg'] = escape(sentences);
+	sentences = sentences.split(/\r\n|\r|\n/);
+	$('#ShareField').empty().append("http://3615.poks.me/" + parameterArrayToGet(getArguments));
+
 
 	$('#InputField').focus().on('input', function() {
 		if (!inputFieldTaped) {
 			this.value = this.value[0];
 			inputFieldTaped = true;
 		}
+		getArguments['msg'] = escape(this.value);
+		$('#ShareField').empty().append("http://3615.poks.me/" + parameterArrayToGet(getArguments));
+
 		sentences = this.value.toLowerCase().split(/\r\n|\r|\n/);
 		removeTypedMessage();
 		processTypedMessage();
 		setCameraPosition();
+	}).click(function() { inputFieldTaped = true;});
+
+	$("#ShareField").hide();	
+	$("#shareButton").click(function() {
+		if ($(this).hasClass("UIButton")) {
+			$(this).removeClass("UIButton").addClass("UIButtonActive");
+			$("#ShareField").fadeIn();
+		} else {
+			$(this).removeClass("UIButtonActive").addClass("UIButton");
+			$("#ShareField").fadeOut();			
+		}
+	});
+
+	if (starfield) {
+		$("#starfieldButton").addClass("UIButtonActive");
+	} else {
+		$("#starfieldButton").addClass("UIButton");
+	}
+	$("#starfieldButton").click(function() {
+		if (starfield) {
+			$(this).removeClass("UIButtonActive").addClass("UIButton");
+			getArguments['starfield'] = starfield = false;
+			$('#ShareField').empty().append("http://3615.poks.me/" + parameterArrayToGet(getArguments));
+			particleSystem.visible = false;
+		} else {
+			$(this).removeClass("UIButton").addClass("UIButtonActive");
+			getArguments['starfield'] = starfield = true;
+			$('#ShareField').empty().append("http://3615.poks.me/" + parameterArrayToGet(getArguments));
+			particleSystem.visible = true;
+		}
 	});
 
 	function setCameraPosition () {
@@ -433,7 +504,7 @@ $(document).ready(function () {
 
 // PARTICLES
 	// create the particle variables
-	if (starfield) {
+	// if (starfield) {
 		start = 100,
 		end = -800,
 		particleCount = Math.abs(start - end),
@@ -472,8 +543,9 @@ $(document).ready(function () {
 		    pMaterial);
 
 		// add it to the scene
+		particleSystem.visible = starfield;
 		scene.add(particleSystem);
-	}
+	// }
 //
 
 	}
@@ -537,7 +609,7 @@ $(document).ready(function () {
 
 	function onDocumentMouseDown( event ) {
 
-			event.preventDefault();
+			// event.preventDefault();
 
 			var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
 			projector.unprojectVector( vector, camera );
