@@ -454,6 +454,7 @@ $(document).ready(function () {
 		adaptCameraToScreenSize();
 
 		window.addEventListener('resize', adaptCameraToScreenSize, false);
+		window.addEventListener('orientationchange', adaptCameraToScreenSize, false);
 
 		// // NO MORE FULL SCREEN
 		// // allow 'p' to make screenshot
