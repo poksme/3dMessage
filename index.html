@@ -152,7 +152,7 @@ $(document).ready(function () {
 			maxSize = Math.max(maxSize, sentences[i].length);
 		}
 		maxSize = Math.max(maxSize * 5, sentences.length * 10);
-		camera.position.set(0, 0, maxSize * 2 / camera.aspect);
+		camera.position.set(camera.position.x, camera.position.y, maxSize * 2 / camera.aspect);
 	}
 
 	function removeTypedMessage () {
