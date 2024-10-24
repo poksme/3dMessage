@@ -152,7 +152,7 @@ $(document).ready(function () {
 			maxSize = Math.max(maxSize, sentences[i].length);
 		}
 		maxSize = Math.max(maxSize * 5, sentences.length * 10);
-		camera.position.set(0, 0, maxSize);
+		camera.position.set(0, 0, maxSize * 2 / camera.aspect);
 	}
 
 	function removeTypedMessage () {
@@ -444,8 +444,16 @@ $(document).ready(function () {
 		// create a camera contol
 		cameraControls	= new THREEx.DragPanControls(camera)
 
-		// transparently support window resize
-		THREEx.WindowResize.bind(renderer, camera);
+		function adaptCameraToScreenSize() {	
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			camera.aspect	= window.innerWidth / window.innerHeight;
+			setCameraPosition()
+			camera.updateProjectionMatrix();
+		}
+
+		adaptCameraToScreenSize();
+
+		window.addEventListener('resize', adaptCameraToScreenSize, false);
 
 		// // NO MORE FULL SCREEN
 		// // allow 'p' to make screenshot
